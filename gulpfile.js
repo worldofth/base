@@ -105,10 +105,35 @@ function jsWebpack(){
         .pipe(gulp.dest(pkg.paths.build.js));
 }
 
+function jsDevWebpack(){
+    return $.webpackDevMiddleware( $.webpack( require('./webpack.dev-config') ), {
+        publicPath: '/js/',
+        reload: true,
+        reporter: function(){
+            console.log(arguments);
+        }
+    });
+}
+
 // production build
 // add header and sort out sourcemaps
 
 // inline js
 // for loading stuff
 
-gulp.task('default', jsWebpack);
+// to test js build
+function browserSync(done){
+    $.browserSync.init({
+        server: {
+            baseDir: pkg.paths.production.base
+        },
+        middleware: [
+            jsDevWebpack()
+        ]
+    }, function(){
+        $.fancyLog('-> Starting BrowserSync');
+        done && done();
+    })
+}
+
+gulp.task('default', browserSync);
