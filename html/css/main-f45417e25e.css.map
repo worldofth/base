@@ -1,0 +1,1 @@
+{"version":3,"sources":["main.scss","test.css"],"names":[],"mappings":";;;;;;;;AAEA,KACI,qBAHO,AAIP,oBAAA,AAAa,oBAAb,AAAa,YAAA,CAChB,ACLD,MACA,YAAA,AACA,qBAAA,CACA","file":"main-f45417e25e.css","sourcesContent":["$color: red;\n\n.box{\n    background-color: $color;\n    display: flex;\n}\n",".box2{\n    color: green;\n    background-color: #ccc;\n}\n"]}

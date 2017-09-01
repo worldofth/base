@@ -1,10 +1,18 @@
 <html>
 <head>
-    <link href="/css/main.min.css">
 </head>
 <body>
     <h1>test</h1>
 
-    <script src="/js/bundled.js"></script>
+    <script src="/vendor/loadjs.min.js"></script>
+    <script>
+        fetch('/js/manifest.json')
+        .then(function(data){
+            return data.json();
+        })
+        .then(function(files){
+            loadjs([files['vendor.js'], files['main.js']], 'js');
+        });
+    </script>
 </body>
 </html>

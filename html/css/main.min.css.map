@@ -1,1 +1,0 @@
-{"version":3,"sources":["main.scss","test.css"],"names":[],"mappings":";;;;;;;;AAEA,KACI,oBAHO,CAIV,ACJD,MACA,WAAA,CACA","file":"main.min.css","sourcesContent":["$color: red;\n\n.box{\n    background-color: $color;\n}\n",".box2{\n    color: green;\n}\n"]}
