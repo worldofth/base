@@ -1,7 +1,7 @@
 var banner = require('./banner');
 var pkg = require('./package.json');
 var webpack = require('webpack');
-var MinifyPlugin = require("babel-minify-webpack-plugin");
+var MinifyPlugin = require('babel-minify-webpack-plugin');
 var ManifestPlugin = require('webpack-manifest-plugin');
 
 function init(isDev){

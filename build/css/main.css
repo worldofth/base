@@ -4,4 +4,8 @@
   display: -ms-flexbox;
   display: flex; }
 
+body {
+  background-color: #ccc;
+  color: purple; }
+
 /*# sourceMappingURL=main.css.map */
