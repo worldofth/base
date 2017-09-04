@@ -1,0 +1,71 @@
+.h-text-intro{
+	font-size: 1.6rem !important;
+	line-height: 1.625 !important;
+}
+
+.h-subtitle{
+	color: $grey-light;
+
+	.h1 + &{
+		margin-top: -1em !important;
+	}
+
+	& + .h1{
+		margin-top: 50px;
+	}
+}
+
+.h-uppercase{
+	text-transform: uppercase;
+}
+
+.h-pullout{
+	&-text{
+		font-weight: 600;
+
+		@media (min-width: $md){
+			font-size: 1.6rem;
+		}
+	}
+}
+
+.h-link{
+	&--orange{
+		&:hover,
+		&:focus{
+			color: $primary;
+		}
+	}
+
+	&--blue{
+		&:hover,
+		&:focus{
+			color: $secondary;
+		}
+	}
+}
+
+.h-spaced-list{
+	li{
+		margin-bottom: $gutter;
+
+		@media (min-width: $md){
+			margin-bottom: $full-gutter;
+		}
+	}
+}
+
+.h-big-title{
+	margin-bottom: 0;
+	line-height: 1.2;
+
+	@include css-lock(5, 10, 560, 1460);
+}
+
+.h-big-text{
+	font-size: 2.2rem;
+}
+
+.h-text-center{
+	text-align: center;
+}

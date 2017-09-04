@@ -1,0 +1,27 @@
+//====================
+//	Font Families - subset
+//====================
+
+@font-face{
+	font-family: 'fira sans subset';
+	src:
+		url('../fonts/FiraSans-Regular-subset.woff2') format('woff2'),
+		url('../fonts/FiraSans-Regular-subset.woff') format('woff'),
+		url('../fonts/FiraSans-Regular-subset.ttf') format('truetype');
+	font-weight: 400;
+	font-style: normal;
+}
+
+//====================
+//	Font Families
+//====================
+
+@font-face{
+	font-family: 'fira sans';
+	src:
+		url('../fonts/FiraSans-Regular.woff2') format('woff2'),
+		url('../fonts/FiraSans-Regular.woff') format('woff'),
+		url('../fonts/FiraSans-Regular.ttf') format('truetype');
+	font-weight: 400;
+	font-style: normal;
+}

@@ -4,11 +4,11 @@ module.exports = {
 		"browser": true,
 		"node": true
 	},
-    "extends": "eslint:recommended",
+	"extends": "eslint:recommended",
 	"parserOptions": {
-        "ecmaVersion": 6,
-        "sourceType": "module"
-    },
+		"ecmaVersion": 6,
+		"sourceType": "module"
+	},
 	"rules": {
 		"no-console": 0,
 		"indent": [

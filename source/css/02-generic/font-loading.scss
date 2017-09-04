@@ -1,0 +1,41 @@
+.subfont-loaded body{
+	font-family: $font-family-subset;
+}
+
+.font-loaded body{
+	font-family: $font-family;
+}
+
+.subfont-loaded{
+	#{$typegraphyClass} h1,
+	.h1,
+	#{$typegraphyClass} h2,
+	.h2,
+	#{$typegraphyClass}h3,
+	.h3,
+	#{$typegraphyClass} h4,
+	.h4,
+	#{$typegraphyClass} h5,
+	.h5,
+	#{$typegraphyClass} h6,
+	.h6{
+		font-family: $header-font-family-subset;
+	}
+}
+
+.font-loaded{
+	#{$typegraphyClass} h1,
+	.h1,
+	#{$typegraphyClass} h2,
+	.h2,
+	#{$typegraphyClass}h3,
+	.h3,
+	#{$typegraphyClass} h4,
+	.h4,
+	#{$typegraphyClass} h5,
+	.h5,
+	#{$typegraphyClass} h6,
+	.h6{
+		font-family: $header-font-family;
+	}
+}

@@ -1,0 +1,13 @@
+$link-color: $tertiary;
+
+a{
+	background-color: transparent;
+	transition: color $userIn $easeOut;
+	color: $text-color;
+
+	&:hover,
+	&:focus{
+		color: $link-color;
+		transition: color $userOut $easeOut;
+	}
+}

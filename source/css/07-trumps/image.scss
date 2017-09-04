@@ -1,0 +1,19 @@
+.h-image{
+	&__offset{
+		margin-top: 30px;
+
+		@media (min-width: $md){
+			transform: translateX(25%);
+			margin-top: 0;
+		}
+
+		&--left{
+			margin-bottom: 30px;
+
+			@media (min-width: $md){
+				transform: translateX(-25%);
+				margin-bottom: 0;
+			}
+		}
+	}
+}

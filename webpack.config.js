@@ -44,10 +44,7 @@ function init(isDev){
 					return module.context && ~module.context.indexOf('node_modules');
 				}
 			}),
-			new MinifyPlugin({
-				removeConsole: true,
-				removeDebugger: true
-			},{
+			new MinifyPlugin({},{
 				comments: false
 			}),
 			new webpack.HashedModuleIdsPlugin(),

@@ -1,0 +1,15 @@
+a,
+select,
+button,
+label{
+	> *{
+		pointer-events: none;
+	}
+}
+
+button,
+[role="button"],
+label,
+select{
+	user-select: none;
+}

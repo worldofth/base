@@ -1,0 +1,20 @@
+@mixin css-lock($min-size: 3, $max-size: 5, $min-width: 1200, $max-width: 1920, $property: font-size, $unit: rem){
+	#{$property}: #{$min-size}#{$unit};
+
+	$minBreakpointInEms: $min-width / 16;
+	$maxBreakpointInEms: $max-width / 16;
+
+	@media (min-width: #{$minBreakpointInEms}em){
+		@if $unit == rem{
+			#{$property}: calc(#{$min-size}#{$unit} + ((#{$max-size} - #{$min-size}) * ((100vw - #{$min-width}px) / ((#{$max-width} - #{$min-width}) / 10))));
+		}
+
+		@else{
+			#{$property}: calc(#{$min-size}#{$unit} + ((#{$max-size} - #{$min-size}) * ((100vw - #{$min-width}px) / (#{$max-width} - #{$min-width}))));
+		}
+	}
+
+	@media (min-width: #{$maxBreakpointInEms}em){
+		#{$property}: #{$max-size}#{$unit};
+	}
+}

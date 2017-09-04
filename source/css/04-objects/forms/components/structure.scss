@@ -1,0 +1,43 @@
+&__group{
+	margin-bottom: 20px;
+
+	@media (min-width: $sm){
+		&:last-child{
+			margin-bottom: 0;
+		}
+	}
+}
+
+&--inline &__group{
+	display: flex;
+	align-items: center;
+	margin-bottom: 0;
+
+	&:not(:last-child){
+		margin-right: space(2);
+	}
+}
+
+&--inline{
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+&__center{
+	display: flex;
+	justify-content: center;
+}
+
+&__column{
+	display: flex;
+	flex-direction: column;
+
+	> *{
+		flex: 1 1 100%;
+	}
+
+	textarea{
+		height: 100%;
+	}
+}

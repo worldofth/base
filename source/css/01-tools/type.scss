@@ -1,0 +1,138 @@
+@function font-size($tag: p, $breakpoint: md, $unit: $base-font-size-unit){
+	$fontScale: map-get($font-scales, $breakpoint);
+
+	@return font-size-scale($fontScale, $tag, $breakpoint, $unit);
+}
+
+@function font-size-scale-no-unit($fontScale, $tag: p, $breakpoint: md){
+	$fontSize: map-get($fontScale, fontSize);
+	$fontScale: map-get($fontScale, scale);
+
+	$size: strip-unit($fontSize);
+
+	@if $tag == h1{
+		$size: round(($size * 10) * pow($fontScale, 3)) / 10;
+	}
+
+	@else if $tag == h2{
+		$size: round(($size * 10) * pow($fontScale, 2)) / 10;
+	}
+
+	@else if $tag == h3{
+		$size: round(($size * 10) * pow($fontScale, 1)) / 10;
+	}
+
+	@else if $tag == h4{
+		$size: round(($size * 10) * pow($fontScale, 0.5)) / 10;
+	}
+
+	@else if $tag == h6{
+		$size: round(($size * 10) * pow($fontScale, -1)) / 10;
+	}
+
+	// P, h5 don't change size
+	@return $size;
+}
+
+@function font-size-scale($fontScale, $tag: p, $breakpoint: md, $unit: $base-font-size-unit){
+	$size: font-size-scale-no-unit($fontScale, $tag, $breakpoint);
+
+	$size: unit($size, $unit);
+
+	@return $size;
+}
+
+@function line-height-scale($breakpoint: md, $fontScaleMap: $font-scales){
+	$fontScale: map-get($fontScaleMap, $breakpoint);
+
+	@return map-get($fontScale, lineHeight);
+}
+
+@mixin responsiveFontSize($tag: p, $unit: $base-font-size-unit, $includeLineHeight: false){
+	$fontScaleKeys: map-keys($font-scales);
+
+	@each $breakpoint in $fontScaleKeys{
+		$i: index($fontScaleKeys, $breakpoint);
+		$fontScale: map-get($font-scales, $breakpoint);
+
+		@if $i == 1{
+			font-size: font-size-scale($fontScale, $tag, $breakpoint, $unit);
+
+			@if $includeLineHeight{
+				line-height: line-height-scale($breakpoint);
+			}
+		}
+
+		@else{
+			$breakpointValue: map-get($breakpoints, $breakpoint);
+
+			@media (min-width: $breakpointValue){
+				font-size: font-size-scale($fontScale, $tag, $breakpoint, $unit);
+
+				@if $includeLineHeight{
+					line-height: line-height-scale($breakpoint);
+				}
+			}
+		}
+	}
+}
+
+@mixin fluidResonsiveFontSize($tag: p, $unit: $base-font-size-unit, $includeLineHeight: false, $fontScaleMap: $font-scales){
+	$fontScaleKeys: map-keys($fontScaleMap);
+
+	@each $breakpoint in $fontScaleKeys{
+		$i: index($fontScaleKeys, $breakpoint);
+		$length: length($fontScaleKeys);
+		$fontScale: map-get($fontScaleMap, $breakpoint);
+
+		$fontSize: font-size-scale($fontScale, $tag, $breakpoint, $unit);
+
+		@if $i == 1{
+			font-size: $fontSize;
+
+			@if $includeLineHeight{
+				line-height: line-height-scale($breakpoint, $fontScaleMap);
+			}
+		}
+
+		@else{
+			$breakpointValue: map-get($breakpoints, $breakpoint);
+			$prevBreakpointKey: nth($fontScaleKeys, ($i - 1));
+			$prevBreakpointValue: map-get($breakpoints, $prevBreakpointKey);
+			$prevFontScale: map-get($fontScaleMap, $prevBreakpointKey);
+
+			$min-width: strip-unit($prevBreakpointValue) * 16;
+			$max-width: strip-unit($breakpointValue) * 16;
+			$min-size: font-size-scale-no-unit($prevFontScale, $tag, $prevBreakpointKey);
+			$max-size: font-size-scale-no-unit($fontScale, $tag, $breakpoint);
+
+			@media (min-width: $prevBreakpointValue){
+				@if $i <= $length and $min-size != $max-size{
+					@if $unit == rem{
+						font-size: calc(#{$min-size}#{$unit} + ((#{$max-size} - #{$min-size}) * ((100vw - #{$min-width}px) / ((#{$max-width} - #{$min-width}) / 10))));
+					}
+
+					@else{
+						font-size: calc(#{$min-size}#{$unit} + ((#{$max-size} - #{$min-size}) * ((100vw - #{$min-width}px) / (#{$max-width} - #{$min-width}))));
+					}
+				}
+
+				@else{
+					font-size: $fontSize;
+				}
+
+				@if $includeLineHeight{
+					line-height: line-height-scale($breakpoint, $fontScaleMap);
+				}
+			}
+		}
+
+		@if $length > 2 and $i == $length{
+			$breakpointValue: map-get($breakpoints, $breakpoint);
+
+			@media (min-width: $breakpointValue){
+				font-size: $fontSize;
+			}
+		}
+	}
+}

@@ -1,0 +1,59 @@
+//====================
+// Typography
+//====================
+
+$typegraphyClass: ".typography";
+
+// Font Families
+//====================
+// for loading font families lazily, choose a system font here
+$font-family-unloaded: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+$header-font-family-unloaded: $font-family-unloaded;
+
+//sub set of font you want to load, include only [a-zA-Z0-9]
+$font-family-subset: "fira sans subset", $font-family-unloaded;
+$header-font-family-subset: $font-family-subset;
+
+//full loaded font or main font family
+$font-family: "fira sans", $font-family-subset;
+$header-font-family: $font-family;
+
+// sizes/scale
+//====================
+
+// base font size is md breakpoint
+$font-scales: (
+	// xs: (
+	// 	fontSize: 1.4rem,
+	// 	scale: $major-second,
+	// 	lineHeight: 1.5
+	// ),
+	// sm: (
+	// 	fontSize: 1.4rem,
+	// 	scale: $major-third,
+	// 	lineHeight: 1.6
+	// ),
+	md: (
+		fontSize: 1.4rem,
+		scale: $major-third,
+		lineHeight: 1.7143
+	)//,
+	// lg: (
+	// 	fontSize: 1.6rem,
+	// 	scale: $dim-fifth,
+	// 	lineHeight: 1.6
+	// )
+);
+
+$header-line-height: 1.35;
+$p-line-height: 1.7143;
+
+// weights
+//====================
+$font-weight: 400;
+$strong-weight: 600;
+$header-weight: 400;
+
+// Units
+//====================
+$base-font-size-unit: rem;

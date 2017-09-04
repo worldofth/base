@@ -1,0 +1,137 @@
+//====================
+// Typography
+//====================
+
+// Headings
+//===============
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+	font-weight: $header-weight;
+	line-height: $p-line-height;
+	margin-bottom: $type-margin-bottom;
+
+	@include responsiveFontSize(p);
+}
+
+p{
+	margin-bottom: $type-margin-bottom;
+}
+
+#{$typegraphyClass} h1,
+.h1{
+	font-size: 4rem;
+	line-height: 1.35;
+	letter-spacing: 0.08em;
+}
+
+#{$typegraphyClass} h2,
+.h2{
+	font-size: 2.4rem;
+	line-height: 1.4167;
+}
+
+#{$typegraphyClass} h3,
+.h3{
+	@include responsiveFontSize(p);
+
+	line-height: $p-line-height;
+}
+
+#{$typegraphyClass} h4,
+.h4{
+	@include responsiveFontSize(p);
+
+	line-height: $p-line-height;
+}
+
+#{$typegraphyClass} h5,
+.h5{
+	@include responsiveFontSize(p);
+
+	line-height: $p-line-height;
+}
+
+#{$typegraphyClass} h6,
+.h6{
+	@include responsiveFontSize(p);
+
+	line-height: $p-line-height;
+}
+
+#{$typegraphyClass} h1,
+.h1,
+#{$typegraphyClass} h2,
+.h2,
+#{$typegraphyClass} h3,
+.h3,
+#{$typegraphyClass} h4,
+.h4,
+#{$typegraphyClass} h5,
+.h5,
+#{$typegraphyClass} h6,
+.h6{
+	color: currentColor;
+	font-family: $header-font-family-unloaded;
+	margin-bottom: $type-margin-bottom;
+
+	&:not(:first-child){
+		margin-top: $type-margin-top;
+	}
+
+	strong{
+		font-weight: 700;
+	}
+}
+
+#{$typegraphyClass} h1,
+.h1,
+#{$typegraphyClass} h2,
+.h2,
+#{$typegraphyClass} h3,
+.h3,
+#{$typegraphyClass} h4,
+.h4,
+#{$typegraphyClass} h5,
+.h5,
+#{$typegraphyClass}h6,
+.h6{
+	& + h1,
+	& + .h1,
+	& + h2,
+	& + .h2,
+	& + h3,
+	& + .h3,
+	& + h4,
+	& + .h4,
+	& + h5,
+	& + .h5,
+	& + h6,
+	& + .h6{
+		margin-top: $type-margin-neg-top;
+	}
+}
+
+#{$typegraphyClass} h3,
+.h3,
+#{$typegraphyClass} h4,
+.h4{
+	font-weight: 700;
+}
+
+// inline elements
+//===============
+table,
+pre{
+	line-height: line-height-scale();
+	margin-bottom: $type-margin-bottom;
+}
+
+strong,
+b{
+	font-weight: $strong-weight;
+}

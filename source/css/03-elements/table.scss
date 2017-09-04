@@ -1,0 +1,52 @@
+$table-border-color: $text-color;
+
+table{
+	width: 100%;
+	max-width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+	margin-bottom: $type-margin-bottom;
+
+	th{
+		text-align: left;
+	}
+
+	[class*=col]{
+		float: inherit;
+	}
+
+	// Cells
+	> thead,
+	> tbody,
+	> tfoot{
+		> tr{
+			> th,
+			> td{
+				line-height: line-height-scale();
+				padding: 8px;
+				vertical-align: top;
+				border-top: 1px solid $table-border-color;
+			}
+		}
+	}
+	// Bottom align for column headings
+	> thead > tr > th{
+		vertical-align: bottom;
+		border-bottom: 2px solid $table-border-color;
+	}
+	// Remove top border from thead by default
+	> caption + thead,
+	> colgroup + thead,
+	> thead:first-child{
+		> tr:first-child{
+			> th,
+			> td{
+				border-top: 0;
+			}
+		}
+	}
+	// Account for multiple tbody instances
+	> tbody + tbody{
+		border-top: 2px solid $table-border-color;
+	}
+}

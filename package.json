@@ -1,131 +1,160 @@
 {
-    "name": "base",
-    "version": "1.0.0",
-    "main": "index.js",
-    "author": "tomHopkins <tom@tom-hopkins.co.uk>",
-    "license": "UNLICENSED",
-    "copyright": "tomHopkins",
-    "scripts": {
-        "prod": "NODE_ENV=production yarn gulp"
-    },
-    "paths": {
-        "src": {
-            "base": "./source/",
-            "css": "./source/css/",
-            "fonts": "./source/fonts/",
-            "js": "./source/js/src/",
-            "vendorjs": "./source/js/vendor/",
-            "img": "./source/images/",
-            "svgicons": "./source/svgicons/",
-            "patterns": "./source/_patterns/",
-            "data": "./source/_data/",
-            "meta": "./source/_meta/",
-            "annotations": "./source/_annotations",
-            "styleguide": "./node_modules/styleguidekit-assets-default/dist/",
-            "patternlabFiles": "./node_modules/styleguidekit-mustache-default/views/"
-        },
-        "build": {
-            "base": "./build/",
-            "css": "./build/css/",
-            "js": "./build/js/"
-        },
-        "public": {
-            "base": "./public/",
-            "css": "./public/css/",
-            "fonts": "./public/fonts/",
-            "js": "./public/js/",
-            "vendorjs": "./public/vendor/",
-            "img": "./public/images/",
-            "patterns": "./public/patterns/",
-            "data": "./public/styleguide/data/",
-            "annotations": "./public/annotations/",
-            "styleguide": "./public/styleguide/"
-        },
-        "production": {
-            "base": "./html/",
-            "css": "./html/css/",
-            "fonts": "./html/fonts/",
-            "js": "./html/js/",
-            "vendorjs": "./html/vendor/",
-            "img": "./html/images/"
-        }
-    },
-    "vars": {
-        "prodCssName": "main.css",
-        "cssName": "main.css",
-        "scssName": "main.scss",
-        "prodJsName": "main.[chunkhash].js",
-        "prodDevJsName": "main.js",
-        "vendorJsName": "vendor",
-        "vendorJsFileName": "vendor.[chunkhash].js",
-        "vendorDevJsFileName": "vendor.js",
-        "bundledJsName": "bundle.js",
-        "jsName": "index.js",
-        "svgIconName": "svgicons.svg",
-        "faviconName": "favicon.ico"
-    },
-    "publicPaths": {
-        "js": "/js/"
-    },
-    "pageExports": [
-        "pages-index"
-    ],
-    "globs": {
+	"name": "base",
+	"version": "1.0.0",
+	"main": "index.js",
+	"author": "tomHopkins <tom@tom-hopkins.co.uk>",
+	"license": "UNLICENSED",
+	"copyright": "tomHopkins",
+	"scripts": {
+		"prod": "cross-env NODE_ENV=production node ./node_modules/gulp/bin/gulp.js build",
+		"prodBuild": "cross-env NODE_ENV=production node ./node_modules/gulp/bin/gulp.js build",
+		"build": "node ./node_modules/gulp/bin/gulp.js build",
+		"gulp": "node ./node_modules/gulp/bin/gulp.js",
+		"svgicons": "node ./node_modules/gulp/bin/gulp.js updateSvgIcons"
+	},
+	"pageExports": [
+		"pages-index"
+	],
+	"paths": {
+		"src": {
+			"base": "./source/",
+			"css": "./source/css/",
+			"fonts": "./source/fonts/",
+			"js": "./source/js/src/",
+			"vendorjs": "./source/js/vendor/",
+			"img": "./source/images/",
+			"svgicons": "./source/svgicons/",
+			"patterns": "./source/_patterns/",
+			"data": "./source/_data/",
+			"meta": "./source/_meta/",
+			"annotations": "./source/_annotations",
+			"styleguide": "./node_modules/styleguidekit-assets-default/dist/",
+			"patternlabFiles": "./node_modules/styleguidekit-mustache-default/views/"
+		},
+		"build": {
+			"base": "./build/",
+			"css": "./build/css/",
+			"js": "./build/js/"
+		},
+		"public": {
+			"base": "./public/",
+			"css": "./public/css/",
+			"fonts": "./public/fonts/",
+			"js": "./public/js/",
+			"vendorjs": "./public/vendor/",
+			"img": "./public/images/",
+			"patterns": "./public/patterns/",
+			"data": "./public/styleguide/data/",
+			"annotations": "./public/annotations/",
+			"styleguide": "./public/styleguide/"
+		},
+		"production": {
+			"base": "./html/",
+			"css": "./html/css/",
+			"fonts": "./html/fonts/",
+			"js": "./html/js/",
+			"vendorjs": "./html/vendor/",
+			"img": "./html/images/"
+		},
+		"productionSrc": {
+			"meta": "./production/meta/",
+			"pages": "./production/pattern_exports/"
+		}
+	},
+	"vars": {
+		"prodCssName": "main.css",
+		"cssName": "main.css",
+		"styleguideScssName": "styleguide.scss",
+		"scssName": "main.scss",
+		"prodJsName": "main.[chunkhash].js",
+		"prodDevJsName": "main.js",
+		"vendorJsName": "vendor",
+		"vendorJsFileName": "vendor.[chunkhash].js",
+		"vendorDevJsFileName": "vendor.js",
+		"bundledJsName": "bundle.js",
+		"jsName": "index.js",
+		"svgIconName": "svgicons.svg",
+		"faviconName": "favicon.ico",
+		"productionHeaderName": "header.html",
+		"productionFooterName": "footer.html"
+	},
+	"publicPaths": {
+		"js": "/js/"
+	},
+	"globs": {
 		"watchCss": [
 			"./source/css/**/*.scss",
 			"./source/css/*.css"
 		],
-        "distCss": [
-            "./build/css/*.css",
-            "./source/css/*.css"
-        ],
-        "prodDistCss": [
-            "./build/css/*.css",
-            "./source/css/*.css",
-            "!./source/css/pattern-scaffolding.css"
-        ],
-        "inlineJs": [
-            "./node_modules/loadjs/dist/loadjs.min.js"
-        ]
-    },
-    "devDependencies": {
-        "babel-core": "^6.26.0",
-        "babel-loader": "^7.1.2",
-        "babel-minify-webpack-plugin": "^0.2.0",
-        "babel-plugin-transform-object-assign": "^6.22.0",
-        "babel-preset-es2015": "^6.24.1",
-        "browser-sync": "^2.18.13",
-        "chalk": "^2.1.0",
-        "fancy-log": "^1.3.0",
-        "git-rev-sync": "^1.9.1",
-        "gulp": "gulpjs/gulp#4.0",
-        "gulp-autoprefixer": "^4.0.0",
-        "gulp-cached": "^1.1.1",
-        "gulp-concat": "^2.6.1",
-        "gulp-cssnano": "^2.1.2",
-        "gulp-header": "^1.8.9",
-        "gulp-load-plugins": "^1.5.0",
-        "gulp-newer": "^1.3.0",
-        "gulp-plumber": "^1.1.0",
-        "gulp-print": "^2.0.1",
-        "gulp-rev": "^8.0.0",
-        "gulp-sass": "^3.1.0",
-        "gulp-size": "^2.1.0",
-        "gulp-sourcemaps": "^2.6.1",
-        "gulp-svgmin": "^1.2.4",
-        "gulp-svgstore": "^6.1.0",
-        "moment": "^2.18.1",
-        "patternlab-node": "^2.10.0",
-        "rimraf": "^2.6.1",
-        "styleguidekit-assets-default": "^3.5.0",
-        "styleguidekit-mustache-default": "^3.1.0",
-        "webpack": "^3.5.5",
-        "webpack-dev-middleware": "^1.12.0",
-        "webpack-manifest-plugin": "^1.3.1",
-        "webpack-stream": "^4.0.0"
-    },
-    "dependencies": {
-        "loadjs": "^3.5.1",
-        "rxjs": "^5.4.3"
-    }
+		"distCss": [
+			"./build/css/*.css",
+			"./source/css/*.css"
+		],
+		"prodDistCss": [
+			"./build/css/*.css",
+			"!./build/css/styleguide.css",
+			"./source/css/*.css",
+			"!./source/css/pattern-scaffolding.css"
+		],
+		"inlineJs": [
+			"./node_modules/loadjs/dist/loadjs.min.js",
+			"./node_modules/picturefill/dist/picturefill.min.js"
+		]
+	},
+	"devDependencies": {
+		"babel-core": "^6.26.0",
+		"babel-loader": "^7.1.2",
+		"babel-minify-webpack-plugin": "^0.2.0",
+		"babel-plugin-transform-object-assign": "^6.22.0",
+		"babel-preset-es2015": "^6.24.1",
+		"browser-sync": "^2.18.13",
+		"chalk": "^2.1.0",
+		"cross-env": "^5.0.5",
+		"eslint": "^4.6.1",
+		"fancy-log": "^1.3.0",
+		"git-rev-sync": "^1.9.1",
+		"glob": "^7.1.2",
+		"gulp": "gulpjs/gulp#4.0",
+		"gulp-autoprefixer": "^4.0.0",
+		"gulp-cached": "^1.1.1",
+		"gulp-concat": "^2.6.1",
+		"gulp-concat-multi": "^1.0.1",
+		"gulp-cssnano": "^2.1.2",
+		"gulp-header": "^1.8.9",
+		"gulp-html-beautify": "^1.0.1",
+		"gulp-load-plugins": "^1.5.0",
+		"gulp-newer": "^1.3.0",
+		"gulp-plumber": "^1.1.0",
+		"gulp-print": "^2.0.1",
+		"gulp-rev": "^8.0.0",
+		"gulp-sass": "^3.1.0",
+		"gulp-size": "^2.1.0",
+		"gulp-sourcemaps": "^2.6.1",
+		"gulp-svgmin": "^1.2.4",
+		"gulp-svgstore": "^6.1.0",
+		"moment": "^2.18.1",
+		"patternlab-node": "^2.10.0",
+		"rimraf": "^2.6.1",
+		"styleguidekit-assets-default": "^3.5.0",
+		"styleguidekit-mustache-default": "^3.1.0",
+		"stylelint": "^8.0.0",
+		"stylelint-config-standard": "^17.0.0",
+		"webpack": "^3.5.5",
+		"webpack-dev-middleware": "^1.12.0",
+		"webpack-manifest-plugin": "^1.3.1",
+		"webpack-stream": "^4.0.0"
+	},
+	"dependencies": {
+		"fg-loadcss": "^1.3.1",
+		"fontfaceobserver": "^2.0.13",
+		"loadjs": "^3.5.1",
+		"mathsass": "^0.10.1",
+		"picturefill": "^3.0.2",
+		"promise-polyfill": "^6.0.2",
+		"rxjs": "^5.4.3",
+		"svg4everybody": "^2.1.9",
+		"ui-scroll-slider": "git+ssh://git@bitbucket.org:theescape/ui-scroll-slider.git",
+		"ui-slider": "git+ssh://git@bitbucket.org:theescape/ui-slider.git",
+		"whatwg-fetch": "^2.0.3"
+	}
 }

@@ -1,3 +1,12 @@
 {
-	"title": "some title 12345"
+	"title": "title",
+	"subtitle": "subtitle",
+	"btnText": "btn title",
+	"class": "",
+	"wrapperIcon": "icon-border",
+	"iconClass": "",
+	"icon": "files",
+	"link": "#link",
+	"image": "/images/tmp-oil-rig.png",
+	"content": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus laudantium amet fugiat excepturi. Ea placeat, fuga id officiis omnis deleniti totam facere recusandae. Ullam quia amet magni eaque, omnis tempora!</p>"
 }

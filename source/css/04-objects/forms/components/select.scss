@@ -1,0 +1,37 @@
+&__select{
+	position: relative;
+	width: 60%;
+
+	&.disabled{
+		cursor: not-allowed;
+	}
+
+	select{
+		border-radius: $input-border-radius;
+		min-width: 290px;
+		padding-right: 2.5em;
+		cursor: pointer;
+		width: 100%;
+	}
+
+	&-icon{
+		position: absolute;
+		top: 50%;
+		width: 40px;
+		height: 46px;
+		right: 1px;
+		transform: translateY(-50%);
+		pointer-events: none;
+		background-color: transparent;
+
+		svg{
+			height: 100%;
+			width: 18px;
+			stroke: currentColor;
+		}
+	}
+}
+
+&--inline &__select{
+	width: 100%;
+}

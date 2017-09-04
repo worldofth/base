@@ -32,7 +32,13 @@ var banner = require('./banner');
 
 function scss(){
 	$.fancyLog('-> Compiling scss');
-	return gulp.src(pkg.paths.src.css + pkg.vars.scssName)
+
+	var scssSrc = [pkg.paths.src.css + pkg.vars.scssName, pkg.paths.src.css + pkg.vars.styleguideScssName];
+	if(isProd){
+		scssSrc = pkg.paths.src.css + pkg.vars.scssName;
+	}
+
+	return gulp.src(scssSrc)
 		.pipe($.plumber({errorHandler: onError}))
 		.pipe($.sourcemaps.init({loadMaps: true}))
 		.pipe($.sass({
@@ -76,6 +82,16 @@ function prodCss(){
 			minifySelectors: true
 		}))
 		.pipe($.header(banner))
+		.pipe($.sourcemaps.write('./'))
+		.pipe($.size({gzip: true, showFiles: true}))
+		.pipe(gulp.dest(pkg.paths.production.css));
+}
+
+function revCss(){
+	$.fancyLog('-> Revisioning Production css');
+
+	return gulp.src(pkg.paths.production.css + pkg.vars.prodCssName)
+		.pipe($.sourcemaps.init({loadMaps: true}))
 		.pipe($.rev())
 		.pipe($.sourcemaps.write('./'))
 		.pipe($.size({gzip: true, showFiles: true}))
@@ -92,7 +108,7 @@ function cleanCss(done){
 
 var buildCss = gulp.series(scss, css);
 if(isProd){
-	buildCss = gulp.series(scss, cleanCss, prodCss);
+	buildCss = gulp.series(cleanCss, scss, prodCss, revCss);
 }
 
 function watchCss(){
@@ -178,6 +194,17 @@ function jsDev(){
 
 var buildJS = gulp.series(cleanJS, js);
 
+function watchJS(done){
+	if(!isProd){
+		done && done();
+		return;
+	}
+
+	$.fancyLog('-> Watching js');
+
+	gulp.watch(pkg.paths.src.js + '**/*.js', { awaitWriteFinish: true }, gulp.series(buildJS, reload));
+}
+
 // ====================
 // Assets
 // ====================
@@ -252,33 +279,33 @@ function svgstore(){
 	$.fancyLog('-> Compiling svgs');
 
 	return gulp.src(pkg.paths.src.svgicons + '*.svg')
-	.pipe($.svgmin(function(file){
-		var prefix = path.basename(file.relative, path.extname(file.relative));
-		return {
-			js2svg: {
-				pretty: true
-			},
-			plugins: [{
-				cleanupIDs: {
-					prefix: prefix + '-',
-					minify: true
-				}
-			},{
-				cleanupNumericValues: {
-					floatPrecision: 5
+		.pipe($.svgmin(function(file){
+			var prefix = path.basename(file.relative, path.extname(file.relative));
+			return {
+				js2svg: {
+					pretty: true
 				},
-			},
-			{
-				removeTitle: true
-			},{
-				sortAttrs: true
-			},{
-				convertShapeToPath: false
-			}]
-		};
-	}))
-	.pipe(svgstore())
-	.pipe(gulp.dest(pkg.paths.src.img));
+				plugins: [{
+					cleanupIDs: {
+						prefix: prefix + '-',
+						minify: true
+					}
+				},{
+					cleanupNumericValues: {
+						floatPrecision: 5
+					},
+				},
+				{
+					removeTitle: true
+				},{
+					sortAttrs: true
+				},{
+					convertShapeToPath: false
+				}]
+			};
+		}))
+		.pipe($.svgstore())
+		.pipe(gulp.dest(pkg.paths.src.img));
 }
 
 var updateSvgIcons = gulp.series(svgstore, images);
@@ -337,6 +364,7 @@ function watchStyleguideFiles(){
 }
 
 var patternlabConfig = require('./patternlab-config.json');
+patternlabConfig.patternExportPatternPartials = pkg.pageExports;
 var patternlab = require('patternlab-node')(patternlabConfig);
 
 function build(done) {
@@ -365,6 +393,44 @@ function watchStyleguideSourceFiles(){
 	gulp.watch(pkg.paths.src.data + '**/*.json', { awaitWriteFinish: true }, gulp.series(build, reload));
 	gulp.watch(pkg.paths.src.meta + '**/*', { awaitWriteFinish: true }, gulp.series(build, reload));
 	gulp.watch(pkg.paths.src.annotations + '**/*', { awaitWriteFinish: true }, gulp.series(build, reload));
+}
+
+// ====================
+// Html
+// ====================
+
+function htmlProdBuild(done){
+	if(!isProd){
+		done && done();
+		return;
+	}
+
+	var htmlFiles = $.glob.sync(pkg.paths.productionSrc.pages + '*.html');
+	var headerFile = pkg.paths.productionSrc.meta + pkg.vars.productionHeaderName;
+	var footerFile = pkg.paths.productionSrc.meta + pkg.vars.productionFooterName;
+
+	var concatFiles = {};
+	for (var i = 0; i < htmlFiles.length; i++) {
+		var htmlName = htmlFiles[i].split('/').pop().replace('pages-', '');
+		concatFiles[htmlName] = [headerFile, htmlFiles[i], footerFile];
+	}
+
+	return $.concatMulti(concatFiles)
+		.pipe($.htmlBeautify({
+			indent_with_tabs: true,
+			indent_size: 4
+		}))
+		.pipe(gulp.dest(pkg.paths.production.base));
+}
+
+function watchHtml(){
+	if(!isProd){
+		return;
+	}
+
+	$.fancyLog('-> Watching pattern lab page exports');
+
+	gulp.watch(pkg.paths.productionSrc.pages + '*.html', { awaitWriteFinish: true }, gulp.series(htmlProdBuild, reload));
 }
 
 // ====================
@@ -416,19 +482,62 @@ function serv(done){
 	});
 }
 
+function servBuild(done){
+	if(!isProd){
+		done && done();
+		return;
+	}
+
+	var baseDir = pkg.paths.production.base;
+
+	var browserSyncConfig = {
+		server: {
+			baseDir: baseDir
+		},
+		notify: {
+			styles: [
+				'display: none',
+				'padding: 15px',
+				'font-family: sans-serif',
+				'position: fixed',
+				'font-size: 1em',
+				'z-index: 9999',
+				'bottom: 0px',
+				'right: 0px',
+				'border-top-left-radius: 5px',
+				'background-color: #1B2032',
+				'opacity: 0.4',
+				'margin: 0',
+				'color: white',
+				'text-align: center'
+			]
+		}
+	};
+
+	browserSyncInstance.init(browserSyncConfig, function(){
+		$.fancyLog('-> Starting BrowserSync');
+		done && done();
+	});
+}
+
 // ====================
 // Tasks
 // ====================
 
 function watch(){
 	watchCss();
+	watchJS();
 	watchAssets();
 	watchSvgIcons();
 	watchStyleguideFiles();
 	watchStyleguideSourceFiles();
+	watchHtml();
 }
 
 gulp.task('updateSvgIcons', updateSvgIcons);
 gulp.task('updateAssets', updateAssets);
-gulp.task('build', gulp.parallel(svgstore, updateAssets, buildCss, buildJS, patternLabBuild));
-gulp.task('default', gulp.series(updateAssets, buildCss, patternLabBuild, gulp.parallel(serv, watch)));
+gulp.task('build', gulp.series(svgstore, updateAssets, buildCss, buildJS, patternLabBuild, htmlProdBuild, gulp.parallel(servBuild, watch)));
+gulp.task('default', gulp.series(updateAssets, buildCss, patternLabBuild, htmlProdBuild, gulp.parallel(serv, watch)));
+
+// TODO
+// add webpack dev middleware back into prod build

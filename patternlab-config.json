@@ -57,7 +57,7 @@
   "patternStates": {
   },
   "patternExportPatternPartials": [],
-  "patternExportDirectory": "./pattern_exports/",
+  "patternExportDirectory": "./production/pattern_exports/",
   "cacheBust": true,
   "starterkitSubDir": "dist",
   "outputFileSuffixes": {

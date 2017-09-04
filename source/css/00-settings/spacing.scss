@@ -1,0 +1,27 @@
+//====================
+// Spacings
+//====================
+
+// Base Vertical Space
+//====================
+$space: 8px;
+$dspace: $space * 2;
+$tspace: $space * 3;
+
+// type vertical space
+//====================
+$type-margin-top: 		1em;
+$type-margin-bottom: 	0.66em;
+$type-margin-neg-top: 	-0.25em;
+
+// Horizontal Space
+//====================
+$total-gutter: 30px;
+$gutter: $total-gutter / 2;
+$pull-in-gutter: 96px;
+$pull-in-total-gutter: $pull-in-gutter * 2;
+
+// Border
+//====================
+$border-radius: 8px;
+$border-size: 2px;

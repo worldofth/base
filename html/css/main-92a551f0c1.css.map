@@ -1,1 +1,0 @@
-{"version":3,"sources":["main.scss"],"names":[],"mappings":";;;;;;;;AAEA,KACI,qBAHO,AAIP,oBAAA,AAAa,oBAAb,AAAa,YAAA,CAChB","file":"main-92a551f0c1.css","sourcesContent":["$color: red;\n\n.box{\n    background-color: $color;\n    display: flex;\n}\n"]}

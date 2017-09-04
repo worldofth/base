@@ -1,0 +1,18 @@
+$input-bg: 					#d9d9d9;
+$input-background-focus: 	#b2dad6;
+$input-placeholder-color: 	$black;
+$input-border: 				$black;
+$input-border-radius: 		$border-radius;
+$input-color: 				$black;
+
+.o-form{
+	//elements
+	@import "./elements/reset";
+	@import "./elements/inputs";
+
+	//components
+	@import "./components/structure";
+	@import "./components/radio-checkbox";
+	@import "./components/select";
+	@import "./components/radio-btn";
+}

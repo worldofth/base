@@ -1,18 +1,44 @@
-<html>
-<head>
-</head>
-<body>
-    <h1>test</h1>
+<!DOCTYPE html>
+<html lang="en">
 
-    <script src="/vendor/loadjs.min.js"></script>
-    <script>
-        fetch('/js/manifest.json')
-        .then(function(data){
-            return data.json();
-        })
-        .then(function(files){
-            loadjs([files['vendor.js'], files['main.js']], 'js');
-        });
-    </script>
+<head>
+	<!-- Basic Page Needs
+	================================================== -->
+	<meta charset="utf-8">
+	<title>Title</title>
+
+	<!-- Useful Metas
+	================================================== -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+
+
+	<link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+
+	<div class="typography">
+		<h1>Home Page Title</h1>
+	</div>
+
+
+
+	<script src="/vendor/loadjs.min.js"></script>
+	<script src="/vendor/picturefill.min.js"></script>
+	<script>
+		fetch('/js/manifest.json')
+			.then(function(data) {
+				return data.json();
+			})
+			.then(function(files) {
+				if (!loadjs.isDefined('foobar')) {
+					loadjs([files['vendor.js'], files['main.js']], 'js', {
+						async: false
+					});
+				}
+			});
+	</script>
 </body>
+
 </html>

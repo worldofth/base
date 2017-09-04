@@ -1,0 +1,43 @@
+label{
+	display: inline-block;
+	margin-bottom: 10px;
+	font-size: 1.2em;
+}
+
+&--filter label{
+	text-transform: uppercase;
+}
+
+&--inline label{
+	white-space: nowrap;
+	margin-bottom: 0;
+	margin-right: space(1);
+}
+
+// Make multiple select elements height not fixed
+select[multiple],
+select[size]{
+	height: auto;
+}
+
+select,
+.radio input,
+.checkbox input{
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+select::-ms-expand{
+	display: none;
+}
+
+// Search inputs in iOS
+//
+// This overrides the extra rounded corners on search inputs in iOS so that our
+// `.form-control` class can properly style them. Note that this cannot simply
+// be added to `.form-control` as it's not specific enough. For details, see
+// https://github.com/twbs/bootstrap/issues/11586.
+input[type="search"]{
+	-webkit-appearance: none;
+}

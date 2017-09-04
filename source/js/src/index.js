@@ -1,5 +1,34 @@
-import { Observable } from 'rxjs/Observable';
-import { add, minus } from './maths';
+import fontloading from './util/font-loading';
+import polyfill from './util/polyfills';
 
-console.log('test');
-console.log(add(4, 5), minus(5, 4), Observable);
+function init(){
+	polyfill();
+	setupFontLoading();
+}
+
+function setupFontLoading(){
+	fontloading({
+		subFonts: [
+			{
+				name: 'fira sans subset',
+				option: {
+					weight: 400
+				}
+			}
+		],
+		fullFonts: [
+			{
+				name: 'fira sans',
+				option: {
+					weight: 400
+				}
+			}
+		]
+	});
+}
+
+if(document.readyState != 'loading'){
+	init();
+}else{
+	document.addEventListener('DOMContentLoaded', init);
+}

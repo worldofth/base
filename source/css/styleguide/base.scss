@@ -1,0 +1,158 @@
+.colours{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+
+	div{
+		width: 200px;
+		height: 100px;
+		margin-bottom: 10px;
+		border: 1px solid #000;
+		padding: 3px;
+		position: relative;
+
+		&:after{
+			content: 'test';
+			position: absolute;
+			bottom: 10px;
+			left: 10px;
+		}
+	}
+
+	div.primary{
+		background: $primary;
+
+		&:after{
+			content: '$primary: #{$primary} ';
+			color: #000;
+		}
+	}
+
+	div.secondary{
+		background: $secondary;
+
+		&:after{
+			content: '$secondary: #{$secondary} ';
+			color: #000;
+		}
+	}
+
+	div.tertiary{
+		background: $tertiary;
+
+		&:after{
+			content: '$tertiary: #{$tertiary} ';
+			color: #000;
+		}
+	}
+
+	div.grey{
+		background: $grey;
+
+		&:after{
+			content: '$grey: #{$grey} ';
+		}
+	}
+
+	div.grey-light{
+		background: $grey-light;
+
+		&:after{
+			content: '$grey-light: #{$grey-light} ';
+		}
+	}
+
+	div.black{
+		background: $black;
+
+		&:after{
+			content: '$black: #{$black} ';
+			color: #fff;
+		}
+	}
+}
+
+.font{
+	font-size: font-size(p);
+	margin-bottom: 10px;
+	font-family: $font-family;
+
+	&:after{
+		content: '" - #{$font-family} "';
+	}
+
+	&-serif{
+		margin-bottom: 10px;
+		font-family: $header-font-family;
+
+		&:after{
+			content: '" - #{$header-font-family} "';
+		}
+	}
+
+	&-norm{
+		font-style: normal;
+	}
+
+	&-italic{
+		font-style: italic;
+	}
+
+	&-100{ font-weight: 100; }
+	&-200{ font-weight: 200; }
+	&-300{ font-weight: 300; }
+	&-400{ font-weight: 400; }
+	&-500{ font-weight: 500; }
+	&-600{ font-weight: 600; }
+	&-700{ font-weight: 700; }
+	&-800{ font-weight: 800; }
+	&-900{ font-weight: 900; }
+}
+
+.animation{
+	width: 100%;
+	background: #ccc;
+	padding: 15px;
+	margin-top: 15px;
+	margin-bottom: 15px;
+
+	&-fade{
+		opacity: 1;
+		transition: opacity 0.3s $easeOut;
+
+		&:hover{
+			opacity: 0;
+		}
+	}
+
+	&-movement{
+		position: relative;
+
+		&-bar{
+			position: absolute;
+			width: 15px;
+			height: 100%;
+			left: 0;
+			top: 0;
+			background: #666;
+			transition: left 0.8s $easeOut;
+		}
+
+		&:hover &-bar{
+			left: calc(100% - 15px);
+		}
+	}
+}
+
+.ratio{
+	&-test{
+		background: #ccc;
+
+		&-container{
+			max-width: 40vw;
+			margin-left: auto;
+			margin-right: auto;
+			margin-bottom: 20px;
+		}
+	}
+}

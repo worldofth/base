@@ -1,0 +1,30 @@
+.o-btn{
+	display: inline-block;
+	min-width: 210px;
+	padding: 10px;
+	font-size: 1.2rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	text-align: center;
+	text-decoration: none;
+	color: $black;
+	background-color: $primary;
+	border: $border-size solid $primary;
+	transition: background-color $userOut $easeOut, color $userOut $easeOut, border-color $userOut $easeOut;
+	border-radius: $border-radius;
+
+	> *{
+		pointer-events: none;
+	}
+
+	&:hover,
+	&:focus{
+		text-decoration: none;
+		background-color: transparent;
+		color: $black;
+	}
+
+	#{$typegraphyClass} &{
+		margin-top: 40px;
+	}
+}
