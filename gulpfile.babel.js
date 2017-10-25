@@ -2,6 +2,7 @@ import gulp from 'gulp';
 import fancyLog from 'fancy-log';
 
 import { scss, css, prodCss, revCss, cleanCss } from './gulp/css';
+import { compileJS, jsDevMiddleware, cleanJS } from './gulp/js';
 import pkg from './package.json';
 import { setupBrowserSync } from './gulp/util';
 
@@ -107,4 +108,119 @@ function watchCss(){
 	gulp.watch(pkg.globs.watchCss, { awaitWriteFinish: true }, gulp.series(buildCss(), reloadCss));
 }
 
-gulp.task('default', gulp.series(buildCss()));
+// ====================
+// js
+// ====================
+
+function setupJsPaths(){
+	const paths = {
+		src: pkg.paths.src.js + pkg.vars.jsName,
+		public: pkg.publicPaths.js,
+		manifest: '/',
+		dest: pkg.paths.plPublic.js
+	};
+
+	if(isProd){
+		paths.dest = pkg.paths.demo.js;
+	}
+
+	if(isBackend){
+		paths.dest = pkg.paths.public.js;
+	}
+
+	let filename = pkg.vars.bundledJsName;
+
+	if(isRevisioning && (isProd || isBackend)){
+		filename = pkg.vars.prodJsName;
+	}
+
+	return {
+		paths,
+		filename
+	};
+}
+
+function buildJS(){
+	const { paths, filename } = setupJsPaths();
+
+	const compileJSFn = compileJS(paths, filename, isProd, isBackend, isRevisioning),
+		cleanJSFn = cleanJS(paths);
+
+	if(isRevisioning && (isProd || isBackend)){
+		return gulp.series(cleanJSFn, compileJSFn);
+	}
+
+	return gulp.series(compileJSFn);
+}
+
+function getJSDevMiddleware(){
+	const { paths, filename } = setupJsPaths();
+
+	return jsDevMiddleware(paths, filename, reload);
+}
+
+function watchJS(done){
+	if(!isProd){
+		done && done();
+	}
+
+	fancyLog(' ');
+	fancyLog('-> Watching JS');
+
+	gulp.watch(pkg.paths.src.js + '**/*.js', { awaitWriteFinish: true }, gulp.series(buildJS(), reload))
+}
+
+// ====================
+// Serv
+// ====================
+
+function serv(done){
+	if(isBackend){
+		done && done();
+		return;
+	}
+
+	var baseDir = pkg.paths.plPublic.base;
+	if(isProd){
+		baseDir = pkg.paths.demo.base;
+	}
+
+	var browserSyncConfig = {
+		server: {
+			baseDir: baseDir
+		},
+		notify: {
+			styles: [
+				'display: none',
+				'padding: 15px',
+				'font-family: sans-serif',
+				'position: fixed',
+				'font-size: 1em',
+				'z-index: 9999',
+				'bottom: 0px',
+				'right: 0px',
+				'border-top-left-radius: 5px',
+				'background-color: #1B2032',
+				'opacity: 0.4',
+				'margin: 0',
+				'color: white',
+				'text-align: center'
+			]
+		}
+	};
+
+	if(!isProd){
+		browserSyncConfig.snippetOptions = {
+			blacklist: ['/index.html', '/', '/?*']
+		};
+		browserSyncConfig.middleware = [getJSDevMiddleware()];
+	}
+
+	browserSyncInstance.init(browserSyncConfig, function(){
+		fancyLog(' ');
+		fancyLog('-> Starting BrowserSync');
+		done && done();
+	});
+}
+
+gulp.task('default', gulp.series(serv));

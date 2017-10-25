@@ -32,7 +32,7 @@
 				return data.json();
 			})
 			.then(function(files) {
-				if (!loadjs.isDefined('foobar')) {
+				if (!loadjs.isDefined('js')) {
 					loadjs([files['vendor.js'], files['main.js']], 'js', {
 						async: false
 					});

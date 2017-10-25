@@ -1,30 +1,5 @@
-import fontloading from './util/font-loading';
-import polyfill from './util/polyfills';
-
 function init(){
-	polyfill();
-	setupFontLoading();
-}
-
-function setupFontLoading(){
-	fontloading({
-		subFonts: [
-			{
-				name: 'fira sans subset',
-				option: {
-					weight: 400
-				}
-			}
-		],
-		fullFonts: [
-			{
-				name: 'fira sans',
-				option: {
-					weight: 400
-				}
-			}
-		]
-	});
+	console.log('test');
 }
 
 if(document.readyState != 'loading'){
