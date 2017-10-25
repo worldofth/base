@@ -3,6 +3,7 @@ import fancyLog from 'fancy-log';
 
 import { scss, css, prodCss, revCss, cleanCss } from './gulp/css';
 import { compileJS, jsDevMiddleware, cleanJS } from './gulp/js';
+import { copyAssets, inlineJs } from './gulp/assets';
 import pkg from './package.json';
 import { setupBrowserSync } from './gulp/util';
 
@@ -171,6 +172,84 @@ function watchJS(done){
 }
 
 // ====================
+// Assets
+// ====================
+
+function setupAssetPaths(){
+	const inlineJSPaths = {
+		src: pkg.globs.inlineJs,
+		dest: pkg.paths.plPublic.vendorjs
+	};
+
+	const fontPaths = {
+		src: pkg.paths.src.fonts + '**/*.*',
+		dest: pkg.paths.plPublic.fonts
+	};
+
+	const imagePaths = {
+		src: pkg.paths.src.img + '**/*.*',
+		dest: pkg.paths.plPublic.img
+	};
+
+	const faviconPaths = {
+		src: pkg.paths.src.base + pkg.vars.faviconName,
+		dest: pkg.paths.plPublic.base
+	};
+
+	if(isProd){
+		inlineJSPaths.dest = pkg.paths.demo.vendorjs;
+		fontPaths.dest = pkg.paths.demo.fonts;
+		imagePaths.dest = pkg.paths.demo.img;
+		faviconPaths.dest = pkg.paths.demo.base;
+	}
+
+	if(isBackend){
+		inlineJSPaths.dest = pkg.paths.public.vendorjs;
+		fontPaths.dest = pkg.paths.public.fonts;
+		imagePaths.dest = pkg.paths.public.img;
+		faviconPaths.dest = pkg.paths.public.base;
+	}
+
+	return {
+		inlineJSPaths,
+		fontPaths,
+		imagePaths,
+		faviconPaths
+	};
+}
+
+function updateAssets(){
+	const { inlineJSPaths, fontPaths, imagePaths, faviconPaths } = setupAssetPaths();
+
+	const inlineJSFn = inlineJs(inlineJSPaths, pkg.vars.inlineJs),
+		fonts = copyAssets(fontPaths, 'Fonts'),
+		image = copyAssets(imagePaths, 'Images'),
+		favicon = copyAssets(faviconPaths, 'Favicon');
+
+	if(isBackend){
+		return gulp.series(inlineJSFn, fonts, image);
+	}
+
+	return gulp.series(inlineJSFn, fonts, image, favicon);
+}
+
+function watchAssets(){
+	const { inlineJSPaths, fontPaths, imagePaths, faviconPaths } = setupAssetPaths();
+
+	const inlineJSFn = inlineJs(inlineJSPaths, pkg.vars.inlineJs),
+		fonts = copyAssets(fontPaths, 'Fonts'),
+		image = copyAssets(imagePaths, 'Images'),
+		favicon = copyAssets(faviconPaths, 'Favicon');
+
+	fancyLog(' ');
+	fancyLog('-> Watching inlinejs, fonts, images and favicon');
+	gulp.watch(inlineJSPaths.src, { awaitWriteFinish: true }, gulp.series(inlineJSFn, reload));
+	gulp.watch(fontPaths.src, { awaitWriteFinish: true }, gulp.series(fonts, reload));
+	gulp.watch(imagePaths.src, { awaitWriteFinish: true }, gulp.series(image, reload));
+	gulp.watch(faviconPaths.src, { awaitWriteFinish: true }, gulp.series(favicon, reload));
+}
+
+// ====================
 // Serv
 // ====================
 
@@ -223,4 +302,6 @@ function serv(done){
 	});
 }
 
-gulp.task('default', gulp.series(serv));
+
+// print out the options chosen, ie prod, backend, revisions etc.
+gulp.task('default', gulp.series(updateAssets()));
