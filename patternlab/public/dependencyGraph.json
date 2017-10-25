@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "timestamp": 1508943559476,
+  "graph": {
+    "options": {
+      "directed": true,
+      "multigraph": false,
+      "compound": false
+    },
+    "nodes": [
+      {
+        "v": "00-base-elements\\00-elements\\01-colors.mustache",
+        "value": {
+          "compileState": "clean"
+        }
+      },
+      {
+        "v": "00-base-elements\\00-elements\\02-animation.mustache",
+        "value": {
+          "compileState": "clean"
+        }
+      },
+      {
+        "v": "00-base-elements\\00-elements\\03-headers.mustache",
+        "value": {
+          "compileState": "clean"
+        }
+      },
+      {
+        "v": "00-base-elements\\00-elements\\04-fonts.mustache",
+        "value": {
+          "compileState": "clean"
+        }
+      },
+      {
+        "v": "00-base-elements\\00-elements\\05-inline-elements.mustache",
+        "value": {
+          "compileState": "clean"
+        }
+      },
+      {
+        "v": "00-base-elements\\00-elements\\06-links.mustache",
+        "value": {
+          "compileState": "clean"
+        }
+      },
+      {
+        "v": "00-base-elements\\00-elements\\07-buttons.mustache",
+        "value": {
+          "compileState": "clean"
+        }
+      },
+      {
+        "v": "00-base-elements\\00-elements\\08-lists.mustache",
+        "value": {
+          "compileState": "clean"
+        }
+      },
+      {
+        "v": "00-base-elements\\00-elements\\09-table.mustache",
+        "value": {
+          "compileState": "clean"
+        }
+      },
+      {
+        "v": "00-base-elements\\00-elements\\10-address.mustache",
+        "value": {
+          "compileState": "clean"
+        }
+      },
+      {
+        "v": "00-base-elements\\00-elements\\11-blockquotes.mustache",
+        "value": {
+          "compileState": "clean"
+        }
+      },
+      {
+        "v": "00-base-elements\\00-elements\\12-ratios.mustache",
+        "value": {
+          "compileState": "clean"
+        }
+      },
+      {
+        "v": "00-base-elements\\00-elements\\13-type.mustache",
+        "value": {
+          "compileState": "clean"
+        }
+      },
+      {
+        "v": "10-templates\\home.mustache",
+        "value": {
+          "compileState": "clean",
+          "lineagePath": "../../patterns/11-pages-index\\11-pages-index.rendered.html",
+          "lineagePattern": "pages-index"
+        }
+      },
+      {
+        "v": "11-pages\\index.mustache",
+        "value": {
+          "compileState": "clean"
+        }
+      },
+      {
+        "v": "util\\svg-show.mustache",
+        "value": {
+          "compileState": "clean"
+        }
+      },
+      {
+        "v": "C:\\data\\frontend\\base\\resources\\patterns\\meta\\_00-head.mustache",
+        "value": {
+          "compileState": null
+        }
+      },
+      {
+        "v": "C:\\data\\frontend\\base\\resources\\patterns\\meta\\_01-foot.mustache",
+        "value": {
+          "compileState": null
+        }
+      }
+    ],
+    "edges": [
+      {
+        "v": "11-pages\\index.mustache",
+        "w": "10-templates\\home.mustache",
+        "value": {}
+      }
+    ]
+  }
+}

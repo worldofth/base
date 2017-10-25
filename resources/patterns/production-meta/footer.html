@@ -1,13 +1,12 @@
 
-	<script src="/vendor/loadjs.min.js"></script>
-	<script src="/vendor/picturefill.min.js"></script>
+	<script src="/vendor/libs.js"></script>
 	<script>
 		fetch('/js/manifest.json')
 			.then(function(data){
 				return data.json();
 			})
 			.then(function(files){
-				if(!loadjs.isDefined('foobar')){
+				if(!loadjs.isDefined('js')){
 					loadjs([files['vendor.js'], files['main.js']], 'js', {
 						async: false
 					});

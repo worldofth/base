@@ -6,15 +6,14 @@
 	"license": "UNLICENSED",
 	"copyright": "tomHopkins",
 	"scripts": {
-		"gulp": "cross-env NODE_ENV=production node ./node_modules/gulp/bin/gulp.js",
 		"prod": "cross-env NODE_ENV=production node ./node_modules/gulp/bin/gulp.js build",
 		"prodBuild": "cross-env NODE_ENV=production node ./node_modules/gulp/bin/gulp.js build",
 		"build": "node ./node_modules/gulp/bin/gulp.js build",
 		"svgicons": "node ./node_modules/gulp/bin/gulp.js updateSvgIcons"
 	},
 	"buildOptions": {
-		"isBackend": true,
-		"isRevisioning": false
+		"isBackend": false,
+		"isRevisioning": true
 	},
 	"pageExports": [
 		"pages-index"
@@ -68,7 +67,7 @@
 			"img": "./html/images/"
 		},
 		"productionSrc": {
-			"meta": "./resources/patterns/production/meta/",
+			"meta": "./resources/patterns/production-meta/",
 			"pages": "./patternlab/pattern_exports/"
 		}
 	},
@@ -88,7 +87,8 @@
 		"inlineJs": "libs.js"
 	},
 	"publicPaths": {
-		"js": "/js/"
+		"js": "/js/",
+		"manifest": "/js/"
 	},
 	"globs": {
 		"watchCss": [

@@ -3,7 +3,9 @@ import fancyLog from 'fancy-log';
 
 import { scss, css, prodCss, revCss, cleanCss } from './gulp/css';
 import { compileJS, jsDevMiddleware, cleanJS } from './gulp/js';
-import { copyAssets, inlineJs } from './gulp/assets';
+import { copyAssets, inlineJs, svgStore } from './gulp/assets';
+import { copyStyleguideCss, buildPatternLab } from './gulp/patternlab';
+import { buildDemoHtml } from './gulp/demo';
 import pkg from './package.json';
 import { setupBrowserSync } from './gulp/util';
 
@@ -117,7 +119,7 @@ function setupJsPaths(){
 	const paths = {
 		src: pkg.paths.src.js + pkg.vars.jsName,
 		public: pkg.publicPaths.js,
-		manifest: '/',
+		manifest: pkg.publicPaths.manifest,
 		dest: pkg.paths.plPublic.js
 	};
 
@@ -168,7 +170,7 @@ function watchJS(done){
 	fancyLog(' ');
 	fancyLog('-> Watching JS');
 
-	gulp.watch(pkg.paths.src.js + '**/*.js', { awaitWriteFinish: true }, gulp.series(buildJS(), reload))
+	gulp.watch(pkg.paths.src.js + '**/*.js', { awaitWriteFinish: true }, gulp.series(buildJS(), reload));
 }
 
 // ====================
@@ -196,6 +198,11 @@ function setupAssetPaths(){
 		dest: pkg.paths.plPublic.base
 	};
 
+	const svgPaths = {
+		src: pkg.paths.src.svgicons + '*.svg',
+		dest: pkg.paths.src.img
+	};
+
 	if(isProd){
 		inlineJSPaths.dest = pkg.paths.demo.vendorjs;
 		fontPaths.dest = pkg.paths.demo.fonts;
@@ -214,32 +221,35 @@ function setupAssetPaths(){
 		inlineJSPaths,
 		fontPaths,
 		imagePaths,
-		faviconPaths
+		faviconPaths,
+		svgPaths
 	};
 }
 
 function updateAssets(){
-	const { inlineJSPaths, fontPaths, imagePaths, faviconPaths } = setupAssetPaths();
+	const { inlineJSPaths, fontPaths, imagePaths, faviconPaths, svgPaths } = setupAssetPaths();
 
 	const inlineJSFn = inlineJs(inlineJSPaths, pkg.vars.inlineJs),
 		fonts = copyAssets(fontPaths, 'Fonts'),
 		image = copyAssets(imagePaths, 'Images'),
-		favicon = copyAssets(faviconPaths, 'Favicon');
+		favicon = copyAssets(faviconPaths, 'Favicon'),
+		svgStoreFn = svgStore(svgPaths);
 
 	if(isBackend){
-		return gulp.series(inlineJSFn, fonts, image);
+		return gulp.series(inlineJSFn, fonts, svgStoreFn, image);
 	}
 
-	return gulp.series(inlineJSFn, fonts, image, favicon);
+	return gulp.series(inlineJSFn, fonts, svgStoreFn, image, favicon);
 }
 
 function watchAssets(){
-	const { inlineJSPaths, fontPaths, imagePaths, faviconPaths } = setupAssetPaths();
+	const { inlineJSPaths, fontPaths, imagePaths, faviconPaths, svgPaths } = setupAssetPaths();
 
 	const inlineJSFn = inlineJs(inlineJSPaths, pkg.vars.inlineJs),
 		fonts = copyAssets(fontPaths, 'Fonts'),
 		image = copyAssets(imagePaths, 'Images'),
-		favicon = copyAssets(faviconPaths, 'Favicon');
+		favicon = copyAssets(faviconPaths, 'Favicon'),
+		svgStoreFn = svgStore(svgPaths);
 
 	fancyLog(' ');
 	fancyLog('-> Watching inlinejs, fonts, images and favicon');
@@ -247,6 +257,75 @@ function watchAssets(){
 	gulp.watch(fontPaths.src, { awaitWriteFinish: true }, gulp.series(fonts, reload));
 	gulp.watch(imagePaths.src, { awaitWriteFinish: true }, gulp.series(image, reload));
 	gulp.watch(faviconPaths.src, { awaitWriteFinish: true }, gulp.series(favicon, reload));
+	gulp.watch(svgPaths.src, { awaitWriteFinish: true }, gulp.series(svgStoreFn, image, reload));
+}
+
+// ====================
+// Pattern Lab
+// ====================
+
+function updatePatternLabAssets(){
+	if(isProd || isBackend){
+		return (done) => { done && done(); };
+	}
+
+	const copyStyleGuidePaths = {
+		src: pkg.paths.src.styleguide + '**/!(*.css)',
+		dest: pkg.paths.plPublic.base
+	};
+
+	const copyStyleGuideCssPaths = {
+		src: pkg.paths.src.styleguide + '**/*.css',
+		dest: pkg.paths.plPublic.styleguide
+	};
+
+	const copyStyleguide = copyAssets(copyStyleGuidePaths, 'styleguide files'),
+		copyStyleguideCssFn = copyStyleguideCss(copyStyleGuideCssPaths);
+
+	return gulp.series(copyStyleguideCssFn, copyStyleguide);
+}
+
+function watchStyleGuideFiles(){
+	if(isProd || isBackend){
+		return;
+	}
+
+	fancyLog('');
+	fancyLog('-> Watching Styleguide files');
+
+	const updatePatternLabAssetsFn = updatePatternLabAssets();
+
+	gulp.watch(pkg.paths.src.styleguide + '**/!(*.css)', { awaitWriteFinish: true }, gulp.series(updatePatternLabAssetsFn, reload));
+	gulp.watch(pkg.paths.src.styleguide + '**/*.css', { awaitWriteFinish: true }, gulp.series(updatePatternLabAssetsFn, reload));
+}
+
+function patternLabBuild(){
+	if(isProd || isBackend){
+		return (done) => { done && done(); };
+	}
+	return gulp.series(updatePatternLabAssets(), buildPatternLab(pkg.pageExports, pkg.paths));
+}
+
+function watchPatternLab(){
+	if(isBackend){
+		return;
+	}
+
+	fancyLog('');
+	fancyLog('-> Watching Pattern Lab source files');
+
+	const build = buildPatternLab(pkg.pageExports, pkg.paths);
+	let buildSeries = gulp.series(build, reload);
+	if(isProd){
+		buildSeries = gulp.series(build);
+	}
+
+	gulp.watch(pkg.paths.src.patterns + '**/*.json', { awaitWriteFinish: true }, buildSeries);
+	gulp.watch(pkg.paths.src.patterns + '**/*.md', { awaitWriteFinish: true }, buildSeries);
+	gulp.watch(pkg.paths.src.patterns + '**/*.mustache', { awaitWriteFinish: true }, buildSeries);
+	gulp.watch(pkg.paths.src.data + '**/*.json', { awaitWriteFinish: true }, buildSeries);
+	gulp.watch(pkg.paths.src.meta + '**/*', { awaitWriteFinish: true }, buildSeries);
+	gulp.watch(pkg.paths.src.annotations + '**/*', { awaitWriteFinish: true }, buildSeries);
 }
 
 // ====================
@@ -302,6 +381,90 @@ function serv(done){
 	});
 }
 
+// ====================
+// Demo
+// ====================
+
+function buildDemo(){
+	if(!isProd || isBackend){
+		return (done) => { done && done(); };
+	}
+
+	const htmlPaths = {
+		src: pkg.paths.productionSrc.pages + '*.html',
+		meta: {
+			head: pkg.paths.productionSrc.meta + pkg.vars.productionHeaderName,
+			foot: pkg.paths.productionSrc.meta + pkg.vars.productionFooterName
+		},
+		dest: pkg.paths.demo.base
+	};
+
+	const buildHtml = buildDemoHtml(htmlPaths);
+
+	return gulp.series(buildHtml);
+}
+
+function watchHtml(){
+	if(!isProd || isBackend){
+		return;
+	}
+
+	fancyLog('-> Watching pattern lab page exports');
+
+	gulp.watch(pkg.paths.productionSrc.pages + '*.html', { awaitWriteFinish: true }, gulp.series(buildDemo(), reload));
+}
+
+// ====================
+// Tasks
+// ====================
+
+function watch(){
+	watchCss();
+	watchJS();
+	watchAssets();
+	watchStyleGuideFiles();
+	watchPatternLab();
+	watchHtml();
+}
+
+function outputBuildInformation(done){
+	let message = [];
+	if(isProd){
+		message.push('Production');
+	}else{
+		message.push('Development');
+	}
+
+	if(isBackend){
+		message.push('Backend');
+	}else{
+		if(isProd){
+			message.push('Demo');
+		}else{
+			message.push('PatternLab');
+		}
+	}
+
+	if(isBackend || isProd){
+		if(isRevisioning){
+			message.push('Revisioning Assets');
+		}else{
+			message.push('Not Revisioning Assets');
+		}
+	}
+
+	message = '-> Build: ' + message.join(', ');
+
+	fancyLog('');
+	fancyLog(message);
+	fancyLog('');
+
+	done && done();
+}
+
 
 // print out the options chosen, ie prod, backend, revisions etc.
-gulp.task('default', gulp.series(updateAssets()));
+gulp.task('build:js', gulp.series(outputBuildInformation, buildJS()));
+gulp.task('build:css', gulp.series(outputBuildInformation, buildCss()));
+gulp.task('watch', gulp.series(outputBuildInformation, updatePatternLabAssets(), updateAssets(), buildCss(), buildJS(), patternLabBuild(), buildDemo(), gulp.parallel(serv, watch)));
+gulp.task('default', gulp.series(outputBuildInformation, updatePatternLabAssets(), updateAssets(), buildCss(), buildJS(), patternLabBuild(), buildDemo()));
