@@ -1,34 +1,13 @@
 import gulp from 'gulp';
-import loadPlugins from 'gulp-load-plugins';
+import fancyLog from 'fancy-log';
 
 import { scss, css, prodCss, revCss, cleanCss } from './gulp/css';
 import pkg from './package.json';
+import { setupBrowserSync } from './gulp/util';
 
-const isBackend = pkg.isBackend;
+const { isBackend, isRevisioning } = pkg.buildOptions;
 const isProd = (process.env.NODE_ENV === 'production');
-
-const plugins = loadPlugins({
-	pattern: ['*'],
-	scope: ['devDependencies']
-});
-
-const browserSyncInstance = plugins.browserSync.create();
-
-const reload = function(done){
-	plugins.fancyLog('-> Reloading Browser');
-	plugins.fancyLog(' ');
-
-	browserSyncInstance.reload();
-	done && done();
-};
-
-const reloadCss = function(done){
-	plugins.fancyLog('-> Reloading Css');
-	plugins.fancyLog(' ');
-
-	browserSyncInstance.reload('*.css');
-	done && done();
-};
+const { browserSyncInstance, reload, reloadCss } = setupBrowserSync();
 
 // ====================
 // css
@@ -36,13 +15,22 @@ const reloadCss = function(done){
 
 function setupCssPaths(){
 	const scssPaths = {
-		src: [pkg.paths.src.css + pkg.vars.scssName, pkg.paths.src.css + pkg.vars.styleguideScssName],
+		src: [
+			pkg.paths.src.css + pkg.vars.scssName,
+			pkg.paths.src.css + pkg.vars.styleguideScssName,
+			pkg.paths.src.css + pkg.vars.typographyScssName
+		],
 		include: pkg.paths.src.scss,
 		dest: pkg.paths.build.css
 	};
 
 	const cssPaths = {
 		src: pkg.globs.distCss,
+		dest: pkg.paths.plPublic.css
+	};
+
+	const typographyCssPaths = {
+		src: pkg.globs.typographyDistCss,
 		dest: pkg.paths.plPublic.css
 	};
 
@@ -60,16 +48,23 @@ function setupCssPaths(){
 		dest: pkg.paths.demo.css
 	};
 
+	if(isProd){
+		typographyCssPaths.dest = pkg.paths.demo.css;
+	}
+
 	if(isBackend){
 		cssPaths.dest = pkg.paths.public.css;
 		prodCssPaths.dest = pkg.paths.public.css;
+		revCssPaths.src = pkg.paths.public.css + pkg.vars.cssName;
 		revCssPaths.dest = pkg.paths.public.css;
 		clearCssPaths.dest = pkg.paths.public.css;
+		typographyCssPaths.dest = pkg.paths.public.css;
 	}
 
 	return {
 		scssPaths,
 		cssPaths,
+		typographyCssPaths,
 		prodCssPaths,
 		revCssPaths,
 		clearCssPaths
@@ -77,30 +72,39 @@ function setupCssPaths(){
 }
 
 function buildCss(){
-	const { scssPaths, cssPaths, prodCssPaths, revCssPaths, clearCssPaths } = setupCssPaths();
+	const { scssPaths, cssPaths, typographyCssPaths, prodCssPaths, revCssPaths, clearCssPaths } = setupCssPaths();
 
-	const scssFn = scss(scssPaths, plugins, gulp, isProd),
+	const scssFn = scss(scssPaths),
+		revCssFn = revCss(revCssPaths),
+		cleanCssFn = cleanCss(clearCssPaths);
 
-		cssFn = css(cssPaths, pkg.vars.cssName, plugins, gulp);
+	let cssFn,
+		typographyCssFn;
 
 	if(isProd){
-		const prodCssFn = prodCss(prodCssPaths, pkg.vars.cssName, plugins, gulp),
-
-			revCssFn = revCss(revCssPaths, plugins, gulp),
-
-			cleanCssFn = cleanCss(clearCssPaths, plugins);
-
-		return gulp.series(cleanCssFn, scssFn, prodCssFn, revCssFn);
+		typographyCssFn = prodCss(typographyCssPaths, pkg.vars.typographyCssName, 'Typography Css');
+		cssFn = prodCss(prodCssPaths, pkg.vars.cssName);
 	}else{
-		return gulp.series(scssFn, cssFn);
+		typographyCssFn = css(typographyCssPaths, pkg.vars.typographyCssName, 'Typography Css');
+		cssFn = css(cssPaths, pkg.vars.cssName);
 	}
+
+	if(isBackend || isProd){
+		if(isRevisioning){
+			return gulp.series(cleanCssFn, scssFn, typographyCssFn, cssFn, revCssFn);
+		}else{
+			return gulp.series(scssFn, typographyCssFn, cssFn);
+		}
+	}
+
+	return gulp.series(scssFn, cssFn);
 }
 
 function watchCss(){
-	plugins.fancyLog('-> Watching Css & Scss');
-	plugins.fancyLog(' ');
+	fancyLog(' ');
+	fancyLog('-> Watching Css & Scss');
 
 	gulp.watch(pkg.globs.watchCss, { awaitWriteFinish: true }, gulp.series(buildCss(), reloadCss));
 }
 
-gulp.task('default', gulp.series(buildCss(), watchCss));
+gulp.task('default', gulp.series(buildCss()));

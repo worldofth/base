@@ -1,54 +1,67 @@
+import gulp from 'gulp';
+import fancyLog from 'fancy-log';
+import plumber from 'gulp-plumber';
+import sourcemaps from 'gulp-sourcemaps';
+import sass from 'gulp-sass';
+import cached from 'gulp-cached';
+import autoprefixer from 'gulp-autoprefixer';
+import size from 'gulp-size';
+import concat from 'gulp-concat';
+import cssnano from 'gulp-cssnano';
+import header from 'gulp-header';
+import rev from 'gulp-rev';
+import rimraf from 'rimraf';
+import print from 'gulp-print';
+
 import { onError } from './util';
 import banner from '../banner';
 
-export function scss(paths, plugins, gulp){
+export function scss(paths){
 	return function scss(){
-		plugins.fancyLog('-> Compiling scss');
-		plugins.fancyLog(' ');
+		fancyLog(' ');
+		fancyLog('-> Compiling scss');
 
 		return gulp.src(paths.src)
-			.pipe(plugins.plumber({errorHandler: onError(plugins)}))
-			.pipe(plugins.sourcemaps.init({loadMaps: true}))
-			.pipe(plugins.sass({
+			.pipe(plumber({errorHandler: onError}))
+			.pipe(sourcemaps.init({loadMaps: true}))
+			.pipe(sass({
 				includePaths: paths.include
-			}).on('error', plugins.sass.logError))
-			.pipe(plugins.cached('sass_compiler'))
-			.pipe(plugins.autoprefixer())
-			.pipe(plugins.sourcemaps.write('./'))
-			.pipe(plugins.size({gzip: true, showFiles: true}))
+			}).on('error', sass.logError))
+			.pipe(cached('sass_compiler'))
+			.pipe(autoprefixer())
+			.pipe(sourcemaps.write('./'))
+			.pipe(size({gzip: true, showFiles: true}))
 			.pipe(gulp.dest(paths.dest));
 	};
 }
 
-export function css(paths, filename, plugins, gulp){
+export function css(paths, filename, taskName = 'css'){
 	return function css(){
-		plugins.fancyLog('-> Compiling css');
-		plugins.fancyLog(' ');
+		fancyLog(' ');
+		fancyLog('-> Compiling '+taskName);
 
 		return gulp.src(paths.src)
-			.pipe(plugins.plumber({errorHandler: onError(plugins)}))
-			.pipe(plugins.newer({dest: paths.dest + filename}))
-			.pipe(plugins.print())
-			.pipe(plugins.sourcemaps.init({loadMaps: true}))
-			.pipe(plugins.concat(filename))
-			.pipe(plugins.sourcemaps.write('./'))
-			.pipe(plugins.size({gzip: true, showFiles: true}))
+			.pipe(plumber({errorHandler: onError}))
+			.pipe(print())
+			.pipe(sourcemaps.init({loadMaps: true}))
+			.pipe(concat(filename))
+			.pipe(sourcemaps.write('./'))
+			.pipe(size({gzip: true, showFiles: true}))
 			.pipe(gulp.dest(paths.dest));
 	};
 }
 
-export function prodCss(paths, filename, plugins, gulp){
+export function prodCss(paths, filename, taskName = 'css'){
 	return function prodCss(){
-		plugins.fancyLog('-> Compiling Production css');
-		plugins.fancyLog(' ');
+		fancyLog(' ');
+		fancyLog('-> Compiling Production '+taskName);
 
 		return gulp.src(paths.src)
-			.pipe(plugins.plumber({errorHandler: onError(plugins)}))
-			.pipe(plugins.newer({dest: paths.dest + filename}))
-			.pipe(plugins.print())
-			.pipe(plugins.sourcemaps.init({loadMaps: true}))
-			.pipe(plugins.concat(filename))
-			.pipe(plugins.cssnano({
+			.pipe(plumber({errorHandler: onError}))
+			.pipe(print())
+			.pipe(sourcemaps.init({loadMaps: true}))
+			.pipe(concat(filename))
+			.pipe(cssnano({
 				discardComments: {
 					removeAll: true
 				},
@@ -57,34 +70,35 @@ export function prodCss(paths, filename, plugins, gulp){
 				minifyFontValues: true,
 				minifySelectors: true
 			}))
-			.pipe(plugins.header(banner))
-			.pipe(plugins.sourcemaps.write('./'))
-			.pipe(plugins.size({gzip: true, showFiles: true}))
+			.pipe(header(banner))
+			.pipe(sourcemaps.write('./'))
+			.pipe(size({gzip: true, showFiles: true}))
 			.pipe(gulp.dest(paths.dest));
 	};
 }
 
-export function revCss(paths, plugins, gulp){
+export function revCss(paths){
 	return function revCss(){
-		plugins.fancyLog('-> Revisioning Production css');
-		plugins.fancyLog(' ');
+		fancyLog(' ');
+		fancyLog('-> Revisioning Production css');
 
 		return gulp.src(paths.src)
-			.pipe(plugins.sourcemaps.init({loadMaps: true}))
-			.pipe(plugins.rev())
-			.pipe(plugins.sourcemaps.write('./'))
-			.pipe(plugins.size({gzip: true, showFiles: true}))
+			.pipe(sourcemaps.init({loadMaps: true}))
+			.pipe(print())
+			.pipe(rev())
+			.pipe(sourcemaps.write('./'))
+			.pipe(size({gzip: true, showFiles: true}))
 			.pipe(gulp.dest(paths.dest))
-			.pipe(plugins.rev.manifest('manifest.json'))
+			.pipe(rev.manifest('manifest.json'))
 			.pipe(gulp.dest(paths.dest));
 	};
 }
 
-export function cleanCss(paths, plugins){
+export function cleanCss(paths){
 	return function cleanCss(done){
-		plugins.fancyLog('-> Cleaning production js folder');
-		plugins.fancyLog(' ');
+		fancyLog(' ');
+		fancyLog('-> Cleaning production js folder');
 
-		plugins.rimraf(paths.dest, done);
+		rimraf(paths.dest, done);
 	};
 }

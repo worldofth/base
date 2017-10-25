@@ -12,7 +12,10 @@
 		"build": "node ./node_modules/gulp/bin/gulp.js build",
 		"svgicons": "node ./node_modules/gulp/bin/gulp.js updateSvgIcons"
 	},
-	"isBackend": false,
+	"buildOptions": {
+		"isBackend": true,
+		"isRevisioning": true
+	},
 	"pageExports": [
 		"pages-index"
 	],
@@ -98,11 +101,15 @@
 			"./resources/assets/sass/*.css",
 			"!./build/css/typography.css"
 		],
+		"typographyDistCss": [
+			"./build/css/typography.css"
+		],
 		"prodDistCss": [
 			"./build/css/*.css",
 			"!./build/css/styleguide.css",
 			"./resources/assets/sass/*.css",
-			"!./resources/assets/sass/pattern-scaffolding.css"
+			"!./resources/assets/sass/pattern-scaffolding.css",
+			"!./build/css/typography.css"
 		],
 		"inlineJs": [
 			"./node_modules/loadjs/dist/loadjs.min.js",
