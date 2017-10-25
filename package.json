@@ -6,28 +6,28 @@
 	"license": "UNLICENSED",
 	"copyright": "tomHopkins",
 	"scripts": {
+		"gulp": "cross-env NODE_ENV=production node ./node_modules/gulp/bin/gulp.js",
 		"prod": "cross-env NODE_ENV=production node ./node_modules/gulp/bin/gulp.js build",
 		"prodBuild": "cross-env NODE_ENV=production node ./node_modules/gulp/bin/gulp.js build",
 		"build": "node ./node_modules/gulp/bin/gulp.js build",
-		"gulp": "node ./node_modules/gulp/bin/gulp.js",
 		"svgicons": "node ./node_modules/gulp/bin/gulp.js updateSvgIcons"
 	},
+	"isBackend": false,
 	"pageExports": [
 		"pages-index"
 	],
 	"paths": {
 		"src": {
-			"base": "./source/",
-			"css": "./source/css/",
-			"fonts": "./source/fonts/",
-			"js": "./source/js/src/",
-			"vendorjs": "./source/js/vendor/",
-			"img": "./source/images/",
-			"svgicons": "./source/svgicons/",
-			"patterns": "./source/_patterns/",
-			"data": "./source/_data/",
-			"meta": "./source/_meta/",
-			"annotations": "./source/_annotations",
+			"base": "./resources/assets/",
+			"css": "./resources/assets/sass/",
+			"fonts": "./resources/assets/fonts/",
+			"js": "./resources/assets/js/src/",
+			"img": "./resources/assets/images/",
+			"svgicons": "./resources/assets/svgicons/",
+			"patterns": "./resources/patterns/patterns/",
+			"data": "./resources/patterns/data/",
+			"meta": "./resources/patterns/meta/",
+			"annotations": "./resources/patterns/annotations",
 			"styleguide": "./node_modules/styleguidekit-assets-default/dist/",
 			"patternlabFiles": "./node_modules/styleguidekit-mustache-default/views/"
 		},
@@ -36,19 +36,27 @@
 			"css": "./build/css/",
 			"js": "./build/js/"
 		},
+		"plPublic": {
+			"base": "./patternlab/public/",
+			"css": "./patternlab/public/css/",
+			"fonts": "./patternlab/public/fonts/",
+			"js": "./patternlab/public/js/",
+			"vendorjs": "./patternlab/public/vendor/",
+			"img": "./patternlab/public/images/",
+			"patterns": "./patternlab/public/patterns/",
+			"data": "./patternlab/public/styleguide/data/",
+			"annotations": "./patternlab/public/annotations/",
+			"styleguide": "./patternlab/public/styleguide/"
+		},
 		"public": {
 			"base": "./public/",
 			"css": "./public/css/",
 			"fonts": "./public/fonts/",
 			"js": "./public/js/",
 			"vendorjs": "./public/vendor/",
-			"img": "./public/images/",
-			"patterns": "./public/patterns/",
-			"data": "./public/styleguide/data/",
-			"annotations": "./public/annotations/",
-			"styleguide": "./public/styleguide/"
+			"img": "./public/images/"
 		},
-		"production": {
+		"demo": {
 			"base": "./html/",
 			"css": "./html/css/",
 			"fonts": "./html/fonts/",
@@ -57,48 +65,49 @@
 			"img": "./html/images/"
 		},
 		"productionSrc": {
-			"meta": "./production/meta/",
-			"pages": "./production/pattern_exports/"
+			"meta": "./resources/patterns/production/meta/",
+			"pages": "./patternlab/pattern_exports/"
 		}
 	},
 	"vars": {
-		"prodCssName": "main.css",
 		"cssName": "main.css",
-		"styleguideScssName": "styleguide.scss",
 		"scssName": "main.scss",
+		"styleguideScssName": "styleguide.scss",
+		"typographyScssName": "typography.scss",
+		"typographyCssName": "typography.css",
 		"prodJsName": "main.[chunkhash].js",
 		"prodDevJsName": "main.js",
-		"vendorJsName": "vendor",
-		"vendorJsFileName": "vendor.[chunkhash].js",
-		"vendorDevJsFileName": "vendor.js",
 		"bundledJsName": "bundle.js",
 		"jsName": "index.js",
 		"svgIconName": "svgicons.svg",
 		"faviconName": "favicon.ico",
 		"productionHeaderName": "header.html",
-		"productionFooterName": "footer.html"
+		"productionFooterName": "footer.html",
+		"inlineJs": "libs.js"
 	},
 	"publicPaths": {
 		"js": "/js/"
 	},
 	"globs": {
 		"watchCss": [
-			"./source/css/**/*.scss",
-			"./source/css/*.css"
+			"./resources/assets/sass/**/*.scss",
+			"./resources/assets/sass/*.css"
 		],
 		"distCss": [
 			"./build/css/*.css",
-			"./source/css/*.css"
+			"./resources/assets/sass/*.css",
+			"!./build/css/typography.css"
 		],
 		"prodDistCss": [
 			"./build/css/*.css",
 			"!./build/css/styleguide.css",
-			"./source/css/*.css",
-			"!./source/css/pattern-scaffolding.css"
+			"./resources/assets/sass/*.css",
+			"!./resources/assets/sass/pattern-scaffolding.css"
 		],
 		"inlineJs": [
 			"./node_modules/loadjs/dist/loadjs.min.js",
-			"./node_modules/picturefill/dist/picturefill.min.js"
+			"./node_modules/picturefill/dist/picturefill.min.js",
+			"./node_modules/svg4everybody/dist/svg4everybody.min.js"
 		]
 	},
 	"devDependencies": {
@@ -106,7 +115,7 @@
 		"babel-loader": "^7.1.2",
 		"babel-minify-webpack-plugin": "^0.2.0",
 		"babel-plugin-transform-object-assign": "^6.22.0",
-		"babel-preset-es2015": "^6.24.1",
+		"babel-preset-env": "^1.6.1",
 		"browser-sync": "^2.18.13",
 		"chalk": "^2.1.0",
 		"cross-env": "^5.0.5",

@@ -20,7 +20,13 @@ function init(isDev){
 				{
 					test: /\.js$/,
 					exclude: /node_modules/,
-					loader: 'babel-loader'
+					loader: 'babel-loader',
+					options: {
+						presets: [
+							['env', {'modules': false}]
+						],
+						plugins: ['transform-object-assign']
+					}
 				}
 			]
 		},

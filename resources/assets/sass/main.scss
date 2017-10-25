@@ -4,7 +4,7 @@
 
 // imports
 // ===================
-@import "../../node_modules/mathsass/dist/_math";
+@import "node_modules/mathsass/dist/_math";
 
 // settings
 //====================
@@ -53,57 +53,13 @@
 //====================
 @import "04-objects/forms/index";
 @import "04-objects/button";
-@import "04-objects/accordion";
-@import "04-objects/icon-box";
-@import "04-objects/quote";
-@import "04-objects/wrapped-icon";
-@import "04-objects/slider";
-@import "04-objects/hamburger";
-@import "04-objects/close";
-@import "04-objects/back-link";
 
 // Layouts
 //====================
 @import "05-layout/common";
-@import "05-layout/row";
-@import "05-layout/cta";
-@import "05-layout/enquiry";
-@import "05-layout/angle-section";
-@import "05-layout/angle-content";
-@import "05-layout/main";
-@import "05-layout/box-row";
-@import "05-layout/client-grid";
-@import "05-layout/box-list";
-@import "05-layout/pullout";
 
 // components
 //====================
-@import "06-components/footer";
-@import "06-components/cta";
-@import "06-components/story";
-@import "06-components/story-slider";
-@import "06-components/testimonial";
-@import "06-components/testimonial-slider";
-@import "06-components/scroll-slider";
-@import "06-components/scroll-animations";
-@import "06-components/image-intro";
-@import "06-components/header";
-@import "06-components/service-row";
-@import "06-components/service-list";
-@import "06-components/image";
-@import "06-components/continue-reading";
-@import "06-components/laptop-slider";
-@import "06-components/cross-slider";
-@import "06-components/support-form";
-@import "06-components/tmp-page-nav";
-
-// components - sldiein
-//====================
-@import "06-components/slidein/buttons";
-@import "06-components/slidein/slidein";
-@import "06-components/slidein/tabs";
-@import "06-components/slidein/primary-nav";
-@import "06-components/slidein/footer";
 
 // trumps
 //====================
